@@ -1,0 +1,27 @@
+import express from 'express';
+import cors from 'cors';
+import https from 'https';
+import fs from 'fs';
+import dotenv from 'dotenv';
+import spotifyRoutes from './routes/spotifyroutes.js';
+import worldclockRoutes from './routes/worldclockapi.js';
+import connectDB from './config/dbconnection.js';
+import authRoutes from './routes/authroute.js';
+import request from 'request';
+import http from 'http';
+const clientid = process.env.CLIENT_ID;
+const clientsecret = process.env.CLIENT_SECRET;
+const hostname = "127.0.0.1";
+const port = 3000;
+connectDB();
+dotenv.config();
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.use('/api/spotify', spotifyRoutes);
+app.use('/api/worldclock', worldclockRoutes);
+app.use('/auth',authRoutes);
+const server = http.createServer(app);
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}`);
+});
